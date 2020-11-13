@@ -101,7 +101,7 @@ public class ReversePlayerMovement : MonoBehaviour
             isDead = false;
 
             // reload current level / beginning of checkpoint
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene("Level1");
         }
 
         // when chest/finish point is reached, load next level
@@ -220,7 +220,7 @@ public class ReversePlayerMovement : MonoBehaviour
 
         // When player dies
         else if (col.gameObject.tag == "DeathZone") {
-            // Respawn player to beg of level
+            // Respawn player to beg of game
 
             // continue timer when player dies
             PlayerPrefs.SetFloat("TimeRem", tObj.timeRemaining); 

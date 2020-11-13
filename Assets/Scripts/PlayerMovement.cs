@@ -99,8 +99,8 @@ public class PlayerMovement : MonoBehaviour
         if (isDead) {
             isDead = false;
 
-            // reload current level / beginning of checkpoint
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            // reload current level / beginning of game
+            SceneManager.LoadScene("Level1");
         }
 
         // when chest/finish point is reached, load next level
