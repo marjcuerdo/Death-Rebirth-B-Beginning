@@ -35,9 +35,15 @@ public class PlayerMovement : MonoBehaviour
 
     public AudioSource coinAudio;
     public AudioSource deathAudio;
+
+    public Animator anim;
+
+    public CharacterController2D cObj;
     
 
 	void Start() {
+        cObj = GetComponent<CharacterController2D>();
+        anim = GetComponent<Animator>();
         sObj = GetComponent<Score>();
 		hObj = GetComponent<Health>();
         tObj = GetComponent<Timer>();
@@ -67,7 +73,18 @@ public class PlayerMovement : MonoBehaviour
         {
         	jump = true;
         	//Debug.Log("jumping");
+
+        } 
+
+        if (horizontalMove == 0 && cObj.m_Grounded) {
+            anim.SetBool("isRunning", false);
+        } else if (horizontalMove > 0 && !cObj.m_Grounded){
+            anim.SetBool("isRunning", false);
+        } else {
+            anim.SetBool("isRunning", true);
         }
+
+
 
         // for crouching
         /*if (Input.GetButtonDown("Crouch")) 
@@ -99,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
         if (isDead) {
             isDead = false;
 
-            // reload current level / beginning of game
+            // reload beginning of game
             SceneManager.LoadScene("Level1");
         }
 
@@ -156,7 +173,7 @@ public class PlayerMovement : MonoBehaviour
     {
     	// Move our character
     	controller.Move(horizontalMove * Time.fixedDeltaTime, false, jump);
-    	jump = false;
+        jump = false;
 
         // Respawn to beginning of level when health is 0
         if (hObj.health == 0) {
@@ -239,6 +256,11 @@ public class PlayerMovement : MonoBehaviour
             PlayerPrefs.SetInt("Player Health", hObj.health);
             PlayerPrefs.SetInt("Extra Hearts", hObj.currentExtraHearts);
             PlayerPrefs.SetInt("Took Damage", (hObj.tookDamage ? 1 : 0));
+
+            if (SceneManager.GetActiveScene().name == "WinScreen") {
+                PlayerPrefs.SetFloat("TimeRem", 300);
+                PlayerPrefs.SetFloat("TimeInc", 0);
+            }
 
             isNewGame = false;
             advanceLevel = true;

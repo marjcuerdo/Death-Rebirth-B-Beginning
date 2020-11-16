@@ -6,7 +6,7 @@ using UnityEngine;
 public class Timer : MonoBehaviour
 {
 	public TextMeshProUGUI timeText;
-	public float timeRemaining = 300; 
+	public float timeRemaining = 600; 
 	public float timeInc = 0;
     public bool timerIsRunning = false;
 
@@ -15,13 +15,13 @@ public class Timer : MonoBehaviour
     void Awake() {
     	gObj = GameObject.Find("Player").GetComponent<PlayerMovement>(); // instantiate to access Player
 
-    	if (gObj.isNewGame == false) {
+    	//if (gObj.isNewGame == false) {
             //Debug.Log("getting time: " + PlayerPrefs.GetFloat("TimeInc").ToString());
             // get current time
             timeInc = PlayerPrefs.GetFloat("TimeInc");
             timeRemaining = PlayerPrefs.GetFloat("TimeRem");
             //Debug.Log("time again: " + PlayerPrefs.GetFloat("TimeInc").ToString());
-        }
+        //}
     }
 
 	void Start() {
@@ -39,7 +39,7 @@ public class Timer : MonoBehaviour
     	// while timer is running
         if (timerIsRunning)
         {
-        	// when 5 mins or 300 secs aren't up yet
+        	// when 10 mins or 600 secs aren't up yet
             if (timeRemaining > 1 )
             {
                 timeRemaining -= Time.deltaTime; // decrement from 5 mins/300 secs
@@ -71,7 +71,7 @@ public class Timer : MonoBehaviour
 
     // reset timer when exit game
     public void OnApplicationQuit(){
-         PlayerPrefs.SetFloat("TimeRem", 300);
+         PlayerPrefs.SetFloat("TimeRem", 600);
          PlayerPrefs.SetFloat("TimeInc", 0);
          //Debug.Log("Reset score");
     }
