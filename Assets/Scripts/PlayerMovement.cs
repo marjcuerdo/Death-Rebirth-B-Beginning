@@ -116,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
         if (isDead) {
             isDead = false;
 
-            // reload beginning of game
+            // reload current level / beginning of checkpoint
             SceneManager.LoadScene("Level1");
         }
 
