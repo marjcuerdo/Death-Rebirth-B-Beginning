@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class ReversePlayerMovement : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class ReversePlayerMovement : MonoBehaviour
     public ReverseScore sObj;
     public ReverseTimer tObj;
     public Wind wObj;
+    public ReverseResetLevel rObj;
 
     SpriteRenderer sr; //
     Color srOrigColor; //
@@ -29,6 +31,9 @@ public class ReversePlayerMovement : MonoBehaviour
     public bool advanceLevel = false;
     public bool isNewGame = true;
 
+    public int deathCounter = 0;
+    public TextMeshProUGUI deathText;
+
     SpriteRenderer[] sprites;
 
     public NextLevel lObj;
@@ -39,10 +44,14 @@ public class ReversePlayerMovement : MonoBehaviour
     public Animator anim;
 
     public ReverseCharacterController cObj;
-    
+
+    void Awake() {
+        deathCounter = PlayerPrefs.GetInt("Player Deaths");
+    }
 
     void Start() {
         cObj = GetComponent<ReverseCharacterController>();
+        rObj = GameObject.Find("God").GetComponent<ReverseResetLevel>();
         anim = GetComponent<Animator>();
         sObj = GetComponent<ReverseScore>();
         hObj = GetComponent<ReverseHealth>();
@@ -85,6 +94,7 @@ public class ReversePlayerMovement : MonoBehaviour
         }
 
 
+        deathText.text = deathCounter.ToString(); // display current # deaths
 
         // for crouching
         /*if (Input.GetButtonDown("Crouch")) 
@@ -115,6 +125,10 @@ public class ReversePlayerMovement : MonoBehaviour
         // Restart level if death conditions are met
         if (isDead) {
             isDead = false;
+
+            deathCounter += 1; // increment death
+            // Debug.Log(deathCounter);
+            PlayerPrefs.SetInt("Player Deaths", deathCounter); ///////////////////
 
             // reload current level / beginning of checkpoint
             SceneManager.LoadScene("Level1");
@@ -203,7 +217,7 @@ public class ReversePlayerMovement : MonoBehaviour
             // Add points to player score
             sObj.AddPoints(10);
             coinAudio.Play();
-            Destroy(col.gameObject);
+            col.gameObject.SetActive(false);
         } 
 
 
@@ -254,6 +268,7 @@ public class ReversePlayerMovement : MonoBehaviour
             PlayerPrefs.SetFloat("TimeInc", tObj.timeInc);
             PlayerPrefs.SetInt("Player Score", sObj.score);
             PlayerPrefs.SetInt("Player Health", hObj.health);
+            PlayerPrefs.SetInt("Player Deaths", deathCounter); ///////////////////////
             PlayerPrefs.SetInt("Extra Hearts", hObj.currentExtraHearts);
             PlayerPrefs.SetInt("Took Damage", (hObj.tookDamage ? 1 : 0));
 
@@ -279,6 +294,10 @@ public class ReversePlayerMovement : MonoBehaviour
 
             //Debug.Log("got HIT");
         }
+    }
+
+    public void OnApplicationQuit(){
+         PlayerPrefs.SetInt("Player Deaths", 0);
     }
 
 
