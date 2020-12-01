@@ -4,32 +4,32 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ReverseTimer : MonoBehaviour
+public class Timer : MonoBehaviour
 {
     public TextMeshProUGUI timeText;
     public float timeRemaining = 900; 
     public float timeInc = 0;
     public bool timerIsRunning = false;
 
-    public ReversePlayerMovement gObj; 
-    public ReverseScore sObj;
-    public ReverseHealth hObj;
+    public PlayerMovement gObj; 
+    public Score sObj;
+    public Health hObj;
 
     void Awake() {
-        gObj = GameObject.Find("Player").GetComponent<ReversePlayerMovement>(); // instantiate to access Player
-        sObj = GameObject.Find("Player").GetComponent<ReverseScore>();
-        hObj = GameObject.Find("Player").GetComponent<ReverseHealth>();
-        //if (gObj.isNewGame == false) {
-            //Debug.Log("getting time: " + PlayerPrefs.GetFloat("TimeInc").ToString());
-            // get current time
-            timeInc = PlayerPrefs.GetFloat("TimeInc");
-            timeRemaining = PlayerPrefs.GetFloat("TimeRem");
-            //Debug.Log("time again: " + PlayerPrefs.GetFloat("TimeInc").ToString());
-        //}
+        gObj = GameObject.Find("Player").GetComponent<PlayerMovement>(); // instantiate to access Player
+        sObj = GameObject.Find("Player").GetComponent<Score>();
+        hObj = GameObject.Find("Player").GetComponent<Health>();
     }
 
     void Start() {
         timerIsRunning = true;
+
+        if (PlayerPrefs.GetFloat("TimeInc") > 0) {
+            timeInc = PlayerPrefs.GetFloat("TimeInc");
+            timeRemaining = PlayerPrefs.GetFloat("TimeRem");
+        }
+
+        gObj.isNewGame = false;
     }
 
     void Update()
@@ -49,6 +49,7 @@ public class ReverseTimer : MonoBehaviour
                 timeRemaining -= Time.deltaTime; // decrement from 5 mins/300 secs
                 timeInc += Time.deltaTime; // increment to current playing time
                 DisplayTime("Current playing time: ", timeInc); // continuously update time
+                Debug.Log(timeRemaining); // continuously update time
             //}
             /*else
             {
